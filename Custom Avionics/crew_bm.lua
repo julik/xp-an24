@@ -52,7 +52,10 @@ local fly_idle = loadSample('Crew_sounds/bm_fly_idle.wav')
 local ground_idle = loadSample('Crew_sounds/bm_idle_mode.wav')
 local prop_lease = loadSample('Crew_sounds/bm_prop_lease.wav')
 local flaps_up = loadSample('Crew_sounds/bm_flaps_up.wav')
+local flaps_5 = loadSample('Crew_sounds/bm_flaps_5.wav')
+local flaps_10 = loadSample('Crew_sounds/bm_flaps_10.wav')
 local flaps_15 = loadSample('Crew_sounds/bm_flaps_15.wav')
+local flaps_30 = loadSample('Crew_sounds/bm_flaps_30.wav')
 local flaps_35 = loadSample('Crew_sounds/bm_flaps_35.wav')
 
 -- played marks
@@ -69,7 +72,10 @@ local fly_idle_was = true --
 local ground_idle_was = true --
 local prop_lease_was = true --
 local flaps_up_was = true --
+local flaps_5_was = false --
+local flaps_10_was = false --
 local flaps_15_was = false --
+local flaps_30_was = false --
 local flaps_35_was = false --
 
 
@@ -120,19 +126,36 @@ function update()
 			playSample(flaps_up, 0)
 			speech_timer = 1
 			flaps_up_was = true
+		elseif not flaps_5_was and flaps < 5.2 and flaps > 4.7 and speech_timer == 0 then
+			
+			playSample(flaps_5, 0)
+			--setSampleGain(flaps_5, 0.5)
+			speech_timer = 1
+			flaps_5_was = true
+		elseif not flaps_10_was and flaps < 10 and flaps > 9.5 and speech_timer == 0 then
+			playSample(flaps_10, 0)
+			speech_timer = 1
+			flaps_10_was = true
 		elseif not flaps_15_was and flaps < 15.5 and flaps > 14.5 and speech_timer == 0 then
 			playSample(flaps_15, 0)
 			speech_timer = 1
 			flaps_15_was = true
+		elseif not flaps_30_was and flaps < 30 and flaps > 29.5 and speech_timer == 0 then
+			playSample(flaps_30, 0)
+			speech_timer = 1
+			flaps_30_was = true
 		elseif not flaps_35_was and flaps > 34.5 and speech_timer == 0 then
 			playSample(flaps_35, 0)
 			speech_timer = 1
 			flaps_35_was = true
 		end		
 	
-		if (flaps > 5 and flaps < 10) or (flaps > 20 and flaps < 30) and speech_timer == 0 then
+		if (flaps > 3 and flaps < 4) or (flaps > 7 and flaps < 9) or (flaps > 11 and flaps < 14) or (flaps > 16 and flaps < 27) or (flaps > 32 and flaps < 34) and speech_timer == 0 then
 			flaps_up_was = false
+			flaps_5_was = false
+			flaps_10_was = false
 			flaps_15_was = false
+			flaps_30_was = false
 			flaps_35_was = false
 		end
 		

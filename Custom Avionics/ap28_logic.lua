@@ -63,8 +63,10 @@ defineProperty("ail_servo", globalPropertyi("sim/operation/failures/rel_servo_ai
 defineProperty("elev_servo", globalPropertyi("sim/operation/failures/rel_servo_elev"))  -- elevator trim fail
 defineProperty("rudd_serv", globalPropertyi("sim/operation/failures/rel_servo_rudd"))  -- rudder trim fail
 defineProperty("thro_serv", globalPropertyi("sim/operation/failures/rel_servo_thro"))  -- throttle fail
-
-
+defineProperty("PF_ApbuttonState", globalPropertyf("parshukovedition/autopilot_state_PF_ApbuttonState"))
+defineProperty("FO_ApbuttonState", globalPropertyf("parshukovedition/autopilot_state_FO_ApbuttonState"))
+local autopilot_off_onn_Sound = loadSample('Sounds/alert/autopilot_disco.wav')
+defineProperty("isalerton", globalPropertyi("parshukovedition/isalerton"))
 -- global variables
 
 
@@ -124,6 +126,10 @@ ap_off_command = findCommand("sim/autopilot/fdir_servos_down_one")
 function ap_off_handler(phase)  -- for all commands phase equals: 0 on press; 1 while holding; 2 on release
 	if 0 == phase and ap_state == 2 then
 		ap_state = 1
+		set(PF_ApbuttonState,0)
+		set(FO_ApbuttonState,0)
+		set(isalerton,1)
+		playSample(autopilot_off_onn_Sound, 0)
     end
 return 0
 end

@@ -39,6 +39,7 @@ local glide_flag_vis = true
 
 -- postframe calculaions
 function update()
+
 	-- time calculations
 	local passed = get(frame_time)
 -- time bug workaround
@@ -48,8 +49,10 @@ if passed > 0 then
 		scale_angle = scale_angle + (rotate_dir + get(rotate_dir_smartcopilot)) * passed * 20 	
 		if scale_angle > 180 then 
 			scale_angle = scale_angle - 360
+			--set(scale_angle_smartcopilot, scale_angle)
 		elseif scale_angle < -180 then
 			scale_angle = scale_angle + 360
+			--set(scale_angle_smartcopilot, scale_angle)
 		end
 		set(scale_angle_smartcopilot, scale_angle)
 	else
@@ -100,132 +103,7 @@ end
 
 
 components = {
-	-- position gauge
---[[	rectangle {
-		position = {99, 99, 2, 2},
-		color = {1, 0, 0, 1},
-	}, --]]
 	
-	-- course flag
-	texture {
-		position = {109, 110, 18, 18},
-		image = get(flag_img),
-		visible = function()
-			return curse_flag_vis
-		end
-	},
-
-	-- glide flag
-	texture {
-		position = {72.5, 73, 18, 18},
-		image = get(flag_img),
-		visible = function()
-			return glide_flag_vis
-		end
-	},	
-	
-    -- vertical plank
-    free_texture {
-        image = get(v_plank_img),
-        position_x = function() 
-             return 99 + curse_plank
-             end,
-        position_y = 45,
-        width = 2,
-        height = 110, 
-    },
-	
-    -- horizontal plank
-    free_texture {
-        image = get(h_plank_img),
-        position_x = 45,
-        position_y = function() 
-             return 99 + glide_plank
-             end,
-        width = 110,
-        height = 2, 
-    },	
-	
-	-- scale
-	needle {
-		position = {2, 2, 196, 196,},
-		image = get(scale),
-		angle = function()
-			return scale_angle
-		end 
-	},
-	
-	-- curse needle
-	needle {
-		position = {15, 15, 170, 170,},
-		image = get(curse_needle),
-		angle = function()
-			return curse_angle
-		end 
-	},	
-
-	-- position triangle
-	texture {
-		position = {94, 177, 12, 23},
-		image = get(scale_triangle),
-	
-	},
-
-	-- knob
-	needle {
-		position = {167, 2, 31, 31},
-		image = get(knob_img),
-		angle = function()
-			return -scale_angle * 5
-		end 
-	},	
-	
-	-- scale rotary
-	clickable {
-        position = {169, 5, 15, 27},  -- search and set right
-        
-       cursor = { 
-            x = 16, 
-            y = 32,  
-            width = 16, 
-            height = 16, 
-            shape = loadImage("rotateleft.png")
-        },  
-        
-       	onMouseClick = function() 
-			rotate_dir = 1
-			set(rotate_dir_smartcopilot, 1)
-			return true
-		end,
-		onMouseUp = function()
-			rotate_dir = 0
-			set(rotate_dir_smartcopilot, 0)			
-			return true		
-		end
-		
-    },
-	clickable {
-        position = {184, 5, 15, 27},  -- search and set right
-        
-       cursor = { 
-            x = 16, 
-            y = 32, 
-            width = 16, 
-            height = 16, 
-            shape = loadImage("rotateright.png")
-        },  
-        
-       	onMouseClick = function() 
-			rotate_dir = -1
-			set(rotate_dir_smartcopilot, -1)
-			return true
-		end,
-		onMouseUp = function()
-			rotate_dir = 0	
-			set(rotate_dir_smartcopilot, 0)
-			return true		
-		end
-    },
 
 
 

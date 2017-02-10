@@ -225,7 +225,7 @@ if passed > 0 then
 	local stopor_active = get(stopor) > 0.5
 	local heat = get(wing_ht)  -- wing heat takes some power from engines
 	
-	if get(sc_control_1) ~= 1 then
+	--if get(sc_control_1) ~= 1 then
 
 		-- limit left rud
 		local left_rud = get(tro_comm_1)
@@ -292,7 +292,7 @@ if passed > 0 then
 		-- set result
 		set(tro_need_3, ru19_rud_need)
 	
-	end
+	--end
 
 end
 

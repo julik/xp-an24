@@ -7,6 +7,8 @@ defineProperty("lan_light_sw", globalPropertyi("sim/custom/xap/An24_misc/lan_lig
 defineProperty("lan_light_open_sw", globalPropertyi("sim/custom/xap/An24_misc/lan_light_open_sw")) -- landing lights switch
 defineProperty("nav_light", globalPropertyf("sim/custom/xap/An24_misc/nav_light")) -- nav light can shine
 defineProperty("beacon_light", globalPropertyf("sim/custom/xap/An24_misc/beacon_light")) -- beacon light ratio
+defineProperty("azs_beacon_down", globalPropertyf("parshukovedition/beacon_down"))
+defineProperty("azs_beacon_up", globalPropertyf("parshukovedition/beacon_up"))
 
 defineProperty("cockpit_red", globalPropertyf("sim/custom/xap/An24_misc/cockpit_red")) -- red cockpit light rotary
 defineProperty("cockpit_spot1", globalPropertyf("sim/custom/xap/An24_misc/cockpit_spot1")) -- cockpit spotlight rotary
@@ -134,16 +136,26 @@ if passed > 0 and passed < 0.1 then
 	if get(rel_wing1L) == 6 or get(rel_wing2L) == 6 or get(rel_wing2L) == 6 or get(rel_wing2L) == 6 or get(rel_wing1R) == 6 or get(rel_wing2R) == 6 or get(rel_wing3R) == 6 or get(rel_wing4R) == 6 then set(sim_nav_light_sw, 0) end
 	
 	-- beacons logic
-	local bec_bright = 0
+	--if get(azs_beacon_down)==1 then
+		local bec_bright = 0
 	if power27 * ano_switch > 21 then 
 		if get(sim_version) ~= 10 then bec_bright = (math.sin(now * FREQ) + 0.5) * (power27 - 10) / (2 * 15) else bec_bright = 0 end
-		set(sim_bec_light_sw, 1)
-	else set(sim_bec_light_sw, 0)
+		--set(sim_bec_light_sw, 1)
+	else --set(sim_bec_light_sw, 0)
 	end 
-	
+	if power27 > 21 then
+	if get(azs_beacon_down)==1 or get(azs_beacon_up)==1 then
+		set(sim_bec_light_sw,1)
+	else
+		set(sim_bec_light_sw,0)
+	end
+	end
 	set(beacon_light, bec_bright)
 	set(bec_light_cc, bec_bright * 8)
-
+	--else
+	--set(sim_bec_light_sw, 0)
+	
+	--end
 	
 	-- landing light logic
 	local lan_sw = get(lan_light_sw)

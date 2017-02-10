@@ -1071,11 +1071,13 @@ components = {
         end,
         --btnOn = get(tmb_up),
         --btnOff = get(tmb_dn),
-        onMouseClick = function()
+        onMouseDown = function()
             if get(bkk_sw_cap) ~= 0 then
                 set(bkk_sw_cap, 0)
+				playSample(cap_sound, 0)
 				set(bkk_sw, 1)
             else
+				playSample(cap_sound, 0)
                 set(bkk_sw_cap, 1)
             end
             return true;
@@ -1094,8 +1096,10 @@ components = {
             if get(bkk_sw_cap) ~= 0 then
 				if get(bkk_sw) ~= 0 then
 					set(bkk_sw, 0)
+					playSample(switch_sound, 0)
 				else
 					set(bkk_sw, 1)
+					playSample(switch_sound, 0)
 				end
 			end
             return true;

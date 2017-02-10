@@ -27,7 +27,8 @@ defineProperty("green_led", loadImage("leds.png", 20, 0, 20, 20))
 defineProperty("elev_force_led", loadImage("lamps.png", 0, 60, 50, 30)) 
 defineProperty("elev_fail_led", loadImage("lamps.png", 150, 30, 50, 30))
 defineProperty("ail_fail_led", loadImage("lamps.png", 200, 30, 50, 30))
-
+--defineProperty("autopilot_statePF", globalPropertyf("parshukovedition/autopilot_state_PF"))
+--defineProperty("autopilot_stateFO", globalPropertyf("parshukovedition/autopilot_state_FO"))
 
 -- initial switchers values
 defineProperty("N1", globalPropertyf("sim/flightmodel/engine/ENGN_N2_[0]"))   
@@ -95,7 +96,9 @@ components = {
 			return ap_elev_fail_light
 		end,
 	},
+	-------------------------------------------------------------------------------------------------
 	
+	-------------------------------------------------------------------------------------------------
 	-- Elevator trim fail light
 	textureLit {
 		image = get(ail_fail_led),

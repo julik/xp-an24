@@ -6,6 +6,7 @@ defineProperty("xpdr_led", globalPropertyf("sim/cockpit/radios/transponder_light
 defineProperty("nosewheel_mode_lamp", globalPropertyi("sim/custom/xap/An24_gauges/nosewheel_mode_lamp"))
 defineProperty("oil_lamp1", globalPropertyf("sim/custom/xap/An24_gauges/oil_lamp1")) -- low quantity lamp
 defineProperty("oil_lamp2", globalPropertyf("sim/custom/xap/An24_gauges/oil_lamp2")) -- low quantity lamp
+defineProperty("tiredeflectionNose", globalPropertyf("sim/flightmodel2/gear/tire_vertical_deflection_mtr[0]"))
 
 -- images
 defineProperty("critical_mode", loadImage("lamps.png", 50, 30, 50, 30))
@@ -63,7 +64,7 @@ components = {
 		position = {760, 428, 20, 20},
 		image = get(yellow_led),
 		visible = function()
-			return nosewheel_mode == 2
+			return nosewheel_mode == 3
 		end
 	},
 	
@@ -72,7 +73,7 @@ components = {
 		position = {780, 428, 20, 20},
 		image = get(green_led),
 		visible = function()
-			return nosewheel_mode == 3
+			return nosewheel_mode == 3 and get(tiredeflectionNose) > 0
 		end
 	},
 

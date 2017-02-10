@@ -149,7 +149,7 @@ function defaultOnMouseUp(comp, x, y, button, parentX, parentY)
         if comp.dragging then
             comp.dragging = 0
         end
-        if get(comp.resizeble) and comp.resizing then
+        if comp.resizing then
             comp.resizing = false
         end
         return true
@@ -203,10 +203,6 @@ end
 
 
 
--- default mouse wheel handler
-function defaultOnMouseWheel(comp, x, y, button, parentX, parentY)
-	
-end
 
 -- default key down handler
 function defaultOnKeyDown(comp, char, key)
@@ -231,8 +227,6 @@ function createComponent(name, parent)
 		fpslimit = createProperty(-1),
 		frames = 0,
 		noRenderSignal = false,
-		clip = createProperty(false),
-		clip_size = createProperty { 0, 0, 0, 0 },
         draw = function (comp) drawAll(comp.components); end,
         update = function (comp) updateAll(comp.components); end,
         name = name,
@@ -246,7 +240,6 @@ function createComponent(name, parent)
         onMouseDown = defaultOnMouseDown,
         onMouseClick = defaultOnMouseClick,
         onMouseMove = defaultOnMouseMove,
-		onMouseWheel = defaultOnMouseWheel,
         onKeyDown = defaultOnKeyDown,
         onKeyUp = defaultOnKeyUp,
 	logInfo = function(...) logInfo('"' .. name .. '"', ...); end,
@@ -304,9 +297,8 @@ function globalPropertyd(name, default)
 end
 
 -- create new double property and set default value
-function createGlobalPropertyd(name, default, notPublishInDRE)    
-	if notPublishInDRE == nil then notPublishInDRE = 0 end
-	local ref = createProp(name, 'double', default, notPublishInDRE, false)
+function createGlobalPropertyd(name, default)
+    local ref = createProp(name, 'double', default)
     return globalPropertyd(name, default)
 end
 
@@ -328,9 +320,8 @@ function globalPropertyf(name, default)
 end
 
 -- create new float property and set default value
-function createGlobalPropertyf(name, default, notPublishInDRE)
-	if notPublishInDRE == nil then notPublishInDRE = 0 end
-    local ref = createProp(name, 'float', default, notPublishInDRE, false)
+function createGlobalPropertyf(name, default)
+    local ref = createProp(name, 'float', default)
     return globalPropertyf(name, default)
 end
 
@@ -352,9 +343,8 @@ function globalPropertyi(name, default)
 end
 
 -- create new float property and set default value
-function createGlobalPropertyi(name, default, notPublishInDRE)
-	if notPublishInDRE == nil then notPublishInDRE = 0 end
-    local ref = createProp(name, 'int', default, notPublishInDRE, false)
+function createGlobalPropertyi(name, default)
+    local ref = createProp(name, 'int', default)
     return globalPropertyi(name, default)
 end
 
@@ -375,9 +365,8 @@ function globalPropertys(name, default)
 end
 
 -- create new string property and set default value
-function createGlobalPropertys(name, maxLen, default, notPublishInDRE)
-	if notPublishInDRE == nil then notPublishInDRE = 0 end
-    local ref = createProp(name, 'string', maxLen, default, notPublishInDRE, false)
+function createGlobalPropertys(name, maxLen, default)
+    local ref = createProp(name, 'string', maxLen, default)
     return globalPropertys(name, default)
 end
 
@@ -387,33 +376,6 @@ function createFuncPropertys(name, getter, setter, maxSize)
     return globalPropertys(name)
 end
 
--- create new shared double property and set default value
-function createGlobalSharedReferenced(name, default, notPublishInDRE)    
-	if notPublishInDRE == nil then notPublishInDRE = 0 end
-	local ref = createProp(name, 'double', default, notPublishInDRE, true)
-    return globalPropertyd(name, default)
-end
-
--- create new shared float property and set default value
-function createGlobalSharedReferencef(name, default, notPublishInDRE)
-	if notPublishInDRE == nil then notPublishInDRE = 0 end
-    local ref = createProp(name, 'float', default, notPublishInDRE, true)
-    return globalPropertyf(name, default)
-end
-
--- create new shared int property and set default value
-function createGlobalSharedReferencei(name, default, notPublishInDRE)
-	if notPublishInDRE == nil then notPublishInDRE = 0 end
-    local ref = createProp(name, 'int', default, notPublishInDRE, true)
-    return globalPropertyi(name, default)
-end
-
--- create new shared string property and set default value
-function createGlobalSharedReferences(name, maxLen, default, notPublishInDRE)
-	if notPublishInDRE == nil then notPublishInDRE = 0 end
-    local ref = createProp(name, 'string', maxLen, default, notPublishInDRE, true)
-    return globalPropertys(name, default)
-end
 
 -- returns value of property
 -- traverse recursive properties
@@ -500,6 +462,7 @@ function updateAll(table)
     end
 end
 
+
 -- draw to component render target
 function renderToTarget(v) 
 	setRenderTarget(v.renderTarget, 1)
@@ -535,24 +498,12 @@ function drawComponent(v)
         else
 			local pos = get(v.position)
 			setTranslation(pos[1], pos[2], pos[3], pos[4], v.size[1], v.size[2])
-			local clip = toboolean(get(v.clip))
-			local cs = get(v.clip_size) and get(v.clip_size) or {pos[1], pos[2], pos[1]+pos[3], pos[2]+pos[4]}			
-			local clip_size = cs[3] > 0 and cs[4] > 0
-			if clip then				
-				if clip_size then					
-					setClipArea(cs[1],cs[2],cs[3],cs[4])				
-				else
-					setClipArea(0, 0, v.size[1], v.size[2])
-				end
-			end
 			v:draw()
-			if clip then
-				resetClipArea()
-			end
 		end 
 		restoreGraphicsContext()
     end
 end
+
 
 -- draw all components from table
 function drawAll(table)
@@ -832,18 +783,6 @@ function update()
     updateComponent(popups)
 end
 
-function logErrorStacktrace(...)
-	logError(...)
-	local currentLevel = 3
-	while true do
-        local errorInfo = debug.getinfo(currentLevel, "Sl")
-        if not errorInfo or errorInfo.what == "C" then break end
-        logError(string.format("Stack trace [%s]:%d", errorInfo.short_src, errorInfo.currentline))
-        currentLevel = currentLevel + 1
-		if currentLevel > 5 then break end
-     end
-end
-
 -- load texture image
 -- loads image and sets texture coords.  It can be called in forms of:
 -- loadImage(fileName) -- sets texture coords to entire texture
@@ -860,7 +799,7 @@ function loadImage(fileName, x, y, width, height)
 
     local tex = getGLTexture(fileName, x, y, width, height)
     if not tex then
-        logErrorStacktrace("Can't load texture", fileName)
+        logError("Can't load texture", fileName)
     end
     return tex
 end
@@ -877,7 +816,7 @@ function loadFont(fileName)
 
     local font = getGLFont(fileName)
     if not font then
-        logErrorStacktrace("Can't load font", fileName)
+        logError("Can't load font", fileName)
     end
     return tex
 end
@@ -894,10 +833,10 @@ function isInRect(rect, x, y)
 end
 
 -- run handler of component
-function runComponentHandler(component, name, mx, my, button, x, y, value)
+function runComponentHandler(component, name, mx, my, button, x, y)
     local handler = rawget(component, name)
     if handler then
-        return handler(component, mx, my, button, x, y, value)
+        return handler(component, mx, my, button, x, y)
     else
         return false
     end
@@ -905,7 +844,7 @@ end
 
 
 -- traverse components and finds best handler with specified name
-function runHandler(component, name, x, y, button, path, value)
+function runHandler(component, name, x, y, button, path)
     local position = get(component.position)
     local size = component.size
     if (not (position and size)) then
@@ -916,7 +855,7 @@ function runHandler(component, name, x, y, button, path, value)
     for i = #component.components, 1, -1 do
         local v = component.components[i]
         if toboolean(get(v.visible)) and isInRect(get(v.position), mx, my) then
-            local res = runHandler(v, name, mx, my, button, path, value)
+            local res = runHandler(v, name, mx, my, button, path)
             if res then
                 if path then
                     table.insert(path, component)
@@ -925,7 +864,7 @@ function runHandler(component, name, x, y, button, path, value)
             end
         end
     end
-    local res = runComponentHandler(component, name, mx, my, button, x, y, value)
+    local res = runComponentHandler(component, name, mx, my, button, x, y)
     if res then
         if path then
             table.insert(path, component)
@@ -971,7 +910,7 @@ end
 
 
 -- run handler of pressed component
-function runPressedHandler(path, name, x, y, button, value)
+function runPressedHandler(path, name, x, y, button)
     local mx = x
     local my = y
     local px = x
@@ -985,21 +924,21 @@ function runPressedHandler(path, name, x, y, button, value)
         mx = (mx - position[1]) * c.size[1] / position[3]
         my = (my - position[2]) * c.size[2] / position[4]
     end
-    return runComponentHandler(path[1], name, mx, my, button, px, py, value)
+    return runComponentHandler(path[1], name, mx, my, button, px, py)
 end
 
 
 -- traverse components and finds best handler with specified name
-function runTopHandler(layer, name, x, y, button, value)
+function runTopHandler(layer, name, x, y, button)
     local path = { }
     if (1 == layer) or (3 == layer) then
-        local res = runHandler(popups, name, x, y, button, path, value)
+        local res = runHandler(popups, name, x, y, button, path)
         if res then
             return true, path
         end
     end
     if (2 == layer) or (3 == layer) then
-        return runHandler(panel, name, x, y, button, path, value), path
+        return runHandler(panel, name, x, y, button, path), path
     end
 end
 
@@ -1177,16 +1116,6 @@ function onMouseMove(x, y, layer)
     return cursorArrow
 end
 
--- Called when mouse wheel event was processed
-function onMouseWheel(x, y, wheelClicks, layer)
-	 if pressedComponentPath then
-        local res = runPressedHandler(pressedComponentPath, "onMouseWheel", 
-                x, y, 4, wheelClicks)
-        return res
-    else
-        return runTopHandler(layer, "onMouseWheel", x, y, 4, wheelClicks)
-    end
-end
 
 -- move panel to top of screen
 function movePanelToTop(panel)
@@ -1208,8 +1137,6 @@ function subpanel(tbl)
     end
     local c = createComponent(name, popups)
     set(c.position, tbl.position)
-	set(c.clip, tbl.clip)
-	set(c.clip_size, tbl.clip_size)
     set(c.mask, tbl.mask)
     c.size = { tbl.position[3], tbl.position[4] }
     c.onMouseClick = function (comp, x, y, button, parentX, parentY)
@@ -1334,10 +1261,10 @@ end
 
 -- save positions of popup components
 function savePopupsPositions()
-    local positions = { }
+	local positions = { }
     for _k, c in pairs(popups.components) do
         if get(c.savePosition) and ('subpanel' ~= get(c.name)) then
-            positions[get(c.name)] = get(c.position)
+			positions[get(c.name)] = get(c.position)
         end
     end
 
@@ -1438,45 +1365,22 @@ end
 
 -- load sample from file
 -- find file using the same rules as for textures
-function loadSample(fileName, createTimer)
-	if createTimer == nil then createTimer = 0 end
+function loadSample(fileName)
     for _, v in ipairs(searchImagePath) do
         local f = v .. '/' .. fileName
         if isFileExists(f) then
-            return loadSampleFromFile(f, createTimer)
+            return loadSampleFromFile(f)
         end
     end
 
     if not isFileExists(fileName) then
-        logErrorStacktrace("Can't find sound", fileName)
+        logError("Can't find sound", fileName)
         return 0
     end
 
-    local s = loadSampleFromFile(fileName, createTimer)
+    local s = loadSampleFromFile(fileName)
     if 0 == s then
-        logErrorStacktrace("Can't load sound", fileName)
-    end
-    return s
-end
-
--- load reversed sample
-function loadSampleReversed(fileName, createTimer)
-	if createTimer == nil then createTimer = 0 end
-    for _, v in ipairs(searchImagePath) do
-        local f = v .. '/' .. fileName
-        if isFileExists(f) then
-            return loadSampleInReverse(f, createTimer)
-        end
-    end
-
-    if not isFileExists(fileName) then
-        logErrorStacktrace("Can't find sound", fileName)
-        return 0
-    end
-
-    local s = loadSampleInReverse(fileName, createTimer)
-    if 0 == s then
-        logErrorStacktrace("Can't load sound", fileName)
+        logError("Can't load sound", fileName)
     end
     return s
 end
@@ -1504,13 +1408,13 @@ function loadObject(fileName)
     end
 
     if not isFileExists(fileName) then
-        logErrorStacktrace("Can't find object", fileName)
+        logError("Can't find object", fileName)
         return 0
     end
 
     local o = loadObjectFromFile(fileName)
     if 0 == o then
-        logErrorStacktrace("Can't load object", fileName)
+        logError("Can't load object", fileName)
     end
     return o
 end
@@ -1530,132 +1434,13 @@ function onAirplaneCountChanged()
     callCallbackForAll("onAirplaneCountChanged")
 end
 
--- merges two tables 
-function table.merge(t1, t2) 
-	t={}
-	for k,v in ipairs(t1) do
-	table.insert(t, v)
-	end 
-	for k,v in ipairs(t2) do
-	table.insert(t, v)
-	end 
-	return t 
+-- liniar interpolation
+--- this is just to give the functions normal names, leftover from babechev
+function newInterpolator(dataTable)
+	return newRamzInterpolator(dataTable)
 end
 
-local function transpose(x)
-	local r = {}
-	
-	for i=1,#x[1] do
-		r[i]={}
-		for j=1,#x do
-			r[i][j] = x[j][i]
-		end
-	end
-	
-	return r
+function interpolate(var, interpolator)
+ return ramzTarate(interpolator, var)
 end
 
--- extracts N-dimensinal table into one table
-function extractArrayData(arr) 
-	if assert(type(arr[1]))~='table' then     
-		return arr    
-	else
-		if assert(type(arr[1][1]))~='table' then
-			arr = transpose(arr)
-		end
-		
-		local res={}  
-		for i=1, #arr do   
-			res = table.merge(res, extractArrayData(arr[i]))      
-		end
-		return res
-	end
-end
-
--- creates new interpolator, returns its handle
-function newInterpolator(...)
-	local arg={...}
-	local input = {}
-	local value = {}
-	
-	if #arg == 1 then --and #arg[1]==2 and #arg[1][1]==#arg[1][2] then
-		input = {arg[1][1]}
-		value = {arg[1][2]}
-		return newCPPInterpolator(input, value)		
-	end
-	
-	local N = #arg-1
-	local M = #arg[N+1]
-	local matrix = arg[N+1]			
-	local size=1
-	
-	
- 
-	if N==0 then 
-		error('number of input arguments into an interpolator must be greater than zero')
-		return
-	end
- 
- 
-	for i=1,N do
-		input[i] = arg[i]  
-		size = size*#arg[i]  
-	end
- 
-	for i=1,M do
-		local val = matrix[i]     
-		value[i] = extractArrayData(val)  
-		if #value[i]~=size then 
-			error('size dimensions mismatch')
-			return
-		end
-	end
-	
-	return newCPPInterpolator(input, value)
-end
-
-function deleteInterpolator(handle)
-	deleteCPPInterpolator(handle)
-end
-
-function interpolate(x, interp, flag)
-	if assert(type(x))=='number' then  x={x} end
-	res = interpolateCPP(interp, x, flag)
-	return #res==1 and res[1] or res
-end
-
-function selfInterpolator(...)
-	local r = {}
-	r.interp = newInterpolator(...)
-	local temp = function(x, flag) 
-					if not flag then flag = 0 end
-					return interpolate(x, r.interp, flag) 
-				 end
-	r.interpolate = temp
-		
-	return r
-end
-
--- OpenGL identifiers for blending
-BLEND_SOURCE_COLOR = 0x0300
-BLEND_ONE_MINUS_SOURCE_COLOR = 0x0301
-BLEND_SOURCE_ALPHA = 0x0302
-BLEND_ONE_MINUS_SOURCE_ALPHA = 0x0303
-BLEND_DESTINATION_ALPHA = 0x0304
-BLEND_ONE_MINUS_DESTINATION_ALPHA = 0x0305
-BLEND_DESTINATION_COLOR = 0x0306
-BLEND_ONE_MINUS_DESTINATION_COLOR = 0x0307
-BLEND_SOURCE_ALPHA_SATURATE = 0x0308
-
-BLEND_CONSTANT_COLOR = 0x8001
-BLEND_ONE_MINUS_CONSTANT_COLOR = 0x8002
-BLEND_CONSTANT_ALPHA = 0x8003
-BLEND_ONE_MINUS_CONSTANT_ALPHA = 0x8004
-
-BLEND_EQUATION_MIN = 0x8007
-BLEND_EQUATION_MAX = 0x8008
-BLEND_EQUATION_SUBTRACT = 0x800A
-BLEND_EQUATION_REVERSE_SUBTRACT = 0x800B
-
--- Default blend equation value		
-BLEND_EQUATION_ADD = 0x8006

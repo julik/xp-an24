@@ -17,7 +17,7 @@ defineProperty("gear_blocks", globalPropertyi("sim/custom/xap/An24_covers/gear_b
 
 defineProperty("ground_available", globalPropertyi("sim/custom/xap/An24_power/ground_available"))
 
-defineProperty("cabin_hatch", globalPropertyi("sim/cockpit2/switches/custom_slider_on[14]"))  -- open/close cabin hatch
+--defineProperty("cabin_hatch", globalPropertyi("parshukovedition/lukbesson_switch"))  -- open/close cabin hatch
 defineProperty("emerg_hatch1", globalPropertyi("sim/cockpit2/switches/custom_slider_on[8]"))  -- open/close emerg_hatch1
 defineProperty("emerg_hatch2", globalPropertyi("sim/cockpit2/switches/custom_slider_on[9]"))  -- open/close emerg_hatch2
 defineProperty("cargo_hatch1", globalPropertyi("sim/cockpit2/switches/custom_slider_on[4]"))  -- open/close cargo_hatch1
@@ -29,7 +29,7 @@ defineProperty("pax_ladder", globalPropertyi("sim/cockpit2/switches/custom_slide
 defineProperty("cabin_press", globalPropertyf("sim/cockpit/pressure/cabin_pressure_differential_psi"))
 defineProperty("GS", globalPropertyf("sim/flightmodel/position/groundspeed"))  -- ground speed
 
-defineProperty("cabin_hatch_stat", globalPropertyf("sim/flightmodel2/misc/custom_slider_ratio[14]"))  -- open/close cabin hatch
+--defineProperty("cabin_hatch_stat", globalPropertyf("parshukovedition/lukbesson"))  -- open/close cabin hatch
 defineProperty("emerg_hatch1_stat", globalPropertyf("sim/flightmodel2/misc/custom_slider_ratio[8]"))  -- open/close emerg_hatch1
 defineProperty("emerg_hatch2_stat", globalPropertyf("sim/flightmodel2/misc/custom_slider_ratio[9]"))  -- open/close emerg_hatch2
 defineProperty("cargo_hatch1_stat", globalPropertyf("sim/flightmodel2/misc/custom_slider_ratio[4]"))  -- open/close cargo_hatch1
@@ -57,7 +57,7 @@ local not_loaded = true
 local door_can_open = true
 local acf_is_moving = false
 
-local cabin_hatch_img = get(green)
+--local cabin_hatch_img = get(green)
 local emerg_hatch1_img = get(green)
 local emerg_hatch2_img = get(green)
 local cargo_hatch1_img = get(green)
@@ -100,10 +100,10 @@ function update()
 	end
 	
 	-- cabin hatch status lights
-	local cabin_hatch_status = get(cabin_hatch_stat)
-	if cabin_hatch_status < 0.05 then cabin_hatch_img = get(green)
-	elseif cabin_hatch_status > 0.95 then cabin_hatch_img = get(empty)
-	else cabin_hatch_img = get(yellow) end
+	--local cabin_hatch_status = get(cabin_hatch_stat)
+	--if cabin_hatch_status < 0.05 then cabin_hatch_img = get(green)
+	--elseif cabin_hatch_status > 0.95 then cabin_hatch_img = get(empty)
+	--else cabin_hatch_img = get(yellow) end
 	
 	-- emerg hatch 1 status lights
 	local emerg_hatch1_status = get(emerg_hatch1_stat)
@@ -156,12 +156,12 @@ components = {
 	},
 	
 	-- cabin hatch
-	texture {
-		position = { 240, 428, 30, 30 },
-		image = function()
-			return cabin_hatch_img
-		end,
-	},
+	--texture {
+	--	position = { 240, 428, 30, 30 },
+	--	image = function()
+	--		return cabin_hatch_img
+	--	end,
+	--},
 	
 	-- emerg hatch 1
 	texture {
@@ -471,22 +471,22 @@ components = {
     },	
 	
     -- cabin hatch
-    switch {
-        position = { 240, 430, 30, 30 },
-        state = function()
-            return get(cabin_hatch) ~= 0
-        end,
+    --switch {
+     --   position = { 240, 430, 30, 30 },
+      --  state = function()
+       --     return get(cabin_hatch) ~= 0
+        --end,
         --btnOn = get(green),
         --btnOff = get(green),
-        onMouseClick = function()
-			if get(cabin_hatch) ~= 0 then
-				set(cabin_hatch, 0)
-			else
-				if door_can_open then set(cabin_hatch, 1) end
-			end
-            return true;
-        end
-    },	
+        --onMouseClick = function()
+		--	if get(cabin_hatch) ~= 0 then
+		--		set(cabin_hatch, 0)
+		--	else
+		--		if door_can_open then set(cabin_hatch, 1) end
+		--	end
+         --   return true;
+        --end
+    --},	
 	
     -- emerg hatch 1
     switch {
@@ -624,7 +624,7 @@ components = {
 			set(grounding, 1)
 			set(gear_blocks, 1)
 			
-			set(cabin_hatch, 0)
+			--set(cabin_hatch, 0)
 			set(emerg_hatch1, 0)
 			set(emerg_hatch2, 0)
 			set(cargo_hatch1, 0)

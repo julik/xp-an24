@@ -7596,7 +7596,7 @@ function WPTpage(types, mode, subpage)
 						end
 						
 						
-						
+
 						
 						
 						if values["CALC1timer"] > 1 or not((lpage == 4 and lsubpage[4] == 50) or (rpage == 5 and rsubpage[5] == 50)) then

@@ -133,6 +133,7 @@ local termo_table = {{ -500, -180},
 local wing_heat_lit = false
 local engine_heat_lit = false
 local prop_heat_lit = false
+local prop_right_lit = false
 local prop_left_lit = true
 local pitot1_lit = false
 local pitot2_lit = false
@@ -418,18 +419,22 @@ if  passed > 0 then
 	if test_button and power27_em then
 		wing_heat_lit = true
 		engine_heat_lit = true
-		pitot1_lit = true
-		pitot2_lit = true
-		aoa_heat_lit = true
-		pitot1_test_lit = true
-		pitot2_test_lit = true
-		aoa_heat_test_lit = true
-		--rio_heat_lit = true
-		prop_left_lit = true
-		ice_left_eng_lit = true
-		ice_right_eng_lit = true
-		ice_on_plane_lit = true
+		--pitot1_lit = true
+		--pitot2_lit = true
+		--aoa_heat_lit = true
+		--pitot1_test_lit = true
+		--pitot2_test_lit = true
+		--aoa_heat_test_lit = true
+		--rio_heat_lit = true --контроль обогрева датчиков РИО
+		--prop_left_lit = true
+		prop_heat_lit = true
+		prop_right_lit= true
+		--ice_left_eng_lit = true
+		--ice_right_eng_lit = true
+		--ice_on_plane_lit = true
 		pos_not_work_lit = true
+	else
+	prop_right_lit = false
 	end
 	
 	-- thermometer gauge
@@ -507,7 +512,14 @@ components = {
 		image = get(green_led),
 		position = {700, 328, 19, 19},
 		visible = function()
-			return prop_left_lit and prop_heat_lit
+			return not prop_left_lit and prop_heat_lit
+		end,
+	},
+textureLit {
+		image = get(green_led),
+		position = {700, 328, 19, 19},
+		visible = function()
+			return prop_right_lit
 		end,
 	},	
 
@@ -516,7 +528,7 @@ components = {
 		image = get(green_led),
 		position = {721, 328, 19, 19},
 		visible = function()
-			return not prop_left_lit and prop_heat_lit
+			return prop_left_lit and prop_heat_lit
 		end,
 	},
 	

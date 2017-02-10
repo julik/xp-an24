@@ -471,6 +471,39 @@ components = {
 	},
 	--set azimuth
 	clickable {
+		position = {661, 100, 20, 20 },
+		
+		cursor = { 
+			x = 16, 
+			y = 32,  
+			width = 16, 
+			height = 16, 
+			shape = loadImage("rotateleft.png")
+		},  
+
+		onMouseClick = function()
+		set_azimut = set_azimut - 10
+		return true
+		end 
+	},	
+	
+	clickable {
+		position = {737, 100, 20, 20 },
+		
+		cursor = { 
+			x = 16, 
+			y = 32,  
+			width = 16, 
+			height = 16, 
+			shape = loadImage("rotateright.png")
+		},  
+
+		onMouseClick = function()
+		set_azimut = set_azimut + 10
+		return true
+		end  
+	},	
+	clickable {
 		position = {687, 100, 20, 20 },
 		
 		cursor = { 
@@ -500,6 +533,39 @@ components = {
 
 		onMouseClick = function()
 		set_azimut = set_azimut + 1
+		return true
+		end  
+	},
+	clickable {
+		position = {687, 70, 20, 20 },
+		
+		cursor = { 
+			x = 16, 
+			y = 32,  
+			width = 16, 
+			height = 16, 
+			shape = loadImage("rotateleft.png")
+		},  
+
+		onMouseClick = function()
+		set_azimut = set_azimut - 0.1
+		return true
+		end 
+	},	
+	
+	clickable {
+		position = {711, 70, 20, 20 },
+		
+		cursor = { 
+			x = 16, 
+			y = 32,  
+			width = 16, 
+			height = 16, 
+			shape = loadImage("rotateright.png")
+		},  
+
+		onMouseClick = function()
+		set_azimut = set_azimut + 0.1
 		return true
 		end  
 	},	
@@ -578,6 +644,39 @@ components = {
 	},
 	--set ZPU
 	clickable {
+		position = {470, 517, 20, 20 },
+		
+		cursor = { 
+			x = 16, 
+			y = 32,  
+			width = 16, 
+			height = 16, 
+			shape = loadImage("rotateleft.png")
+		},  
+
+		onMouseClick = function()
+		set_ZPU = set_ZPU - 10
+		return true
+		end 
+	},	
+	
+	clickable {
+		position = {556, 517, 20, 20 },
+		
+		cursor = { 
+			x = 16, 
+			y = 32,  
+			width = 16, 
+			height = 16, 
+			shape = loadImage("rotateright.png")
+		},  
+
+		onMouseClick = function()
+		set_ZPU = set_ZPU + 10
+		return true
+		end  
+	},	
+	clickable {
 		position = {504, 517, 20, 20 },
 		
 		cursor = { 
@@ -607,6 +706,39 @@ components = {
 
 		onMouseClick = function()
 		set_ZPU = set_ZPU + 1
+		return true
+		end  
+	},	
+	clickable {
+		position = {504, 487, 20, 20 },
+		
+		cursor = { 
+			x = 16, 
+			y = 32,  
+			width = 16, 
+			height = 16, 
+			shape = loadImage("rotateleft.png")
+		},  
+
+		onMouseClick = function()
+		set_ZPU = set_ZPU - 0.1
+		return true
+		end 
+	},	
+	
+	clickable {
+		position = {528, 487, 20, 20 },
+		
+		cursor = { 
+			x = 16, 
+			y = 32,  
+			width = 16, 
+			height = 16, 
+			shape = loadImage("rotateright.png")
+		},  
+
+		onMouseClick = function()
+		set_ZPU = set_ZPU + 0.1
 		return true
 		end  
 	},	
@@ -648,6 +780,72 @@ components = {
 
 		onMouseClick = function()
 		set_targetangle = set_targetangle + 1
+		return true
+		end  
+	},	
+	clickable {
+		position = {696, 487, 20, 20 },
+		
+		cursor = { 
+			x = 16, 
+			y = 32,  
+			width = 16, 
+			height = 16, 
+			shape = loadImage("rotateleft.png")
+		},  
+
+		onMouseClick = function()
+		set_targetangle = set_targetangle - 0.1
+		return true
+		end 
+	},	
+	
+	clickable {
+		position = {720, 487, 20, 20 },
+		
+		cursor = { 
+			x = 16, 
+			y = 32,  
+			width = 16, 
+			height = 16, 
+			shape = loadImage("rotateright.png")
+		},  
+
+		onMouseClick = function()
+		set_targetangle = set_targetangle + 0.1
+		return true
+		end  
+	},	
+	clickable {
+		position = {670, 517, 20, 20 },
+		
+		cursor = { 
+			x = 16, 
+			y = 32,  
+			width = 16, 
+			height = 16, 
+			shape = loadImage("rotateleft.png")
+		},  
+
+		onMouseClick = function()
+		set_targetangle = set_targetangle - 10
+		return true
+		end 
+	},	
+	
+	clickable {
+		position = {746, 517, 20, 20 },
+		
+		cursor = { 
+			x = 16, 
+			y = 32,  
+			width = 16, 
+			height = 16, 
+			shape = loadImage("rotateright.png")
+		},  
+
+		onMouseClick = function()
+		set_targetangle = set_targetangle + 10
 		return true
 		end  
 	},	

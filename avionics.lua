@@ -28,7 +28,17 @@ local vers_year = tonumber(string.sub(text_version, a, b))
 
 print("sim year is", vers_year)
 if vers_year >= 2012 then set(sim_version, 10) end
+function CCom(Comref)
+    --Send only strings, and comDose can == 1 for default description
+    --Will return the find command
+    createCommand(Comref, "No decription given")
+    return findCommand(Comref)
+end
 
+function regCom(CommandName,FuncName)
+    --shortens the registering process.
+    registerCommandHandler(CommandName, 1, FuncName);
+end
 
 
 
@@ -64,6 +74,75 @@ createProp("sim/custom/xap/An24_time/frame_time", "float", 0);
 -- buses
 -- bus parameters
 createProp("sim/custom/xap/An24_power/bus_DC_27_volt", "float", 27);
+
+
+
+--createProp("parshukovedition/lightarray", "float[12]");
+
+
+createProp("parshukovedition/test_lamp_pilot", "int", 0);
+createProp("parshukovedition/test_lamp_pilot1_switch", "int", 0);
+createProp("parshukovedition/test_lamp_pilot2_switch", "int", 0);
+
+-----Lights in the cockpit
+createProp("parshukovedition/overhead_lamp_left_mode", "int", 0);  --0 off, 1 red, 2 white
+createProp("parshukovedition/overhead_lamp_left_bright", "float", 1);
+createProp("parshukovedition/overhead_lamp_left_rot_updown", "float", 45);
+createProp("parshukovedition/overhead_lamp_left_rot_around", "float", 0);
+
+createProp("parshukovedition/overhead_lamp_right_mode", "int", 0);  --0 off, 1 red, 2 white
+createProp("parshukovedition/overhead_lamp_right_bright", "float", 1);
+createProp("parshukovedition/overhead_lamp_right_rot_updown", "float", 45);
+createProp("parshukovedition/overhead_lamp_right_rot_around", "float", 0);
+
+
+createProp("parshukovedition/overhead_lamp_pilot_right_mode", "int", 0);  --0 off, 1 red, 2 white
+createProp("parshukovedition/overhead_lamp_pilot_right_bright", "float", 1);
+createProp("parshukovedition/overhead_lamp_pilot_right_rot_updown", "float", 45);
+createProp("parshukovedition/overhead_lamp_pilot_right_rot_around", "float", 0);
+
+createProp("parshukovedition/overhead_lamp_pilot_left_mode", "int", 0);  --0 off, 1 red, 2 white
+createProp("parshukovedition/overhead_lamp_pilot_left_bright", "float", 1);
+createProp("parshukovedition/overhead_lamp_pilot_left_rot_updown", "float", 45);
+createProp("parshukovedition/overhead_lamp_pilot_left_rot_around", "float", 0);
+---------
+createProp("parshukovedition/soundCap", "int", 0);
+createProp("parshukovedition/switch/main_cabin_light", "int", 0);
+createProp("parshukovedition/switch/main_cabin_light_mode", "float", 1);
+createProp("parshukovedition/switch/main_cabin_light_modeL", "int", 0);
+createProp("parshukovedition/switch/main_cabin_light_modeR", "int", 0);
+createProp("parshukovedition/push/steward_mode", "int", 0);
+createProp("parshukovedition/push/steward", "int", 0);
+createProp("parshukovedition/misc/podnos", "float", 0);
+createProp("parshukovedition/isalerton", "int", 0);
+createProp("parshukovedition/lukbesson", "float", 0);
+createProp("parshukovedition/lukbesson_switch", "int", 0);
+createProp("parshukovedition/beacon_up", "int", 0);
+createProp("parshukovedition/beacon_down", "int", 0);
+createProp("parshukovedition/ssosstate", "int", 0);
+createProp("parshukovedition/flightdeckdoor", "float", 0);
+createProp("parshukovedition/flightdeckdoor_toggle", "float", 0);
+createProp("parshukovedition/flightdeckdoor_state", "float", 0);
+createProp("parshukovedition/msrplight", "int", 0);
+createProp("parshukovedition/testmsrp", "int", 0);
+createProp("parshukovedition/testmsrp_sound_switch", "int", 0);
+createProp("parshukovedition/testmsrp_cap", "int", 0);
+createProp("parshukovedition/testmsrp_sound_switch_cap", "int", 0);
+createProp("parshukovedition/msrp_switch", "int", 0);
+createProp("parshukovedition/msrp_sound_switch", "int", 0);
+createProp("parshukovedition/msrp_switch_cap", "int", 0);
+createProp("parshukovedition/msrp_sound_switch_cap", "int", 0);
+createProp("parshukovedition/nosmokingswitch", "int", 0);
+createProp("parshukovedition/nosmokingswitchonoff", "int", 0);
+createProp("parshukovedition/autopilot_state_PF", "float", 0);
+createProp("parshukovedition/autopilot_state_FO", "float", 0);
+createProp("parshukovedition/autopilot_state_PF_button", "int", 0);
+createProp("parshukovedition/autopilot_state_FO_button", "int", 0);
+createProp("parshukovedition/autopilot_state_PF_ApbuttonState", "float", 3);
+createProp("parshukovedition/autopilot_state_FO_ApbuttonState", "float", 3);
+createProp("parshukovedition/An24_gauges/curse_angle", "float", 0);
+
+
 createProp("sim/custom/xap/An24_power/bus_DC_27_amp", "float", 0);
 createProp("sim/custom/xap/An24_power/bus_DC_27_volt_emerg", "float", 27);
 createProp("sim/custom/xap/An24_power/bus_DC_27_amp_emerg", "float", 0);
@@ -363,7 +442,7 @@ createProp("sim/custom/xap/An24_gauges/auasp_sw", "int", 1);  -- AUASP switcher
 createProp("sim/custom/xap/An24_gauges/auasp_warning", "int", 0);  -- AUASP warning
 createProp("sim/custom/xap/An24_gauges/auasp_button", "int", 0);  -- AUASP check button
 createProp("sim/custom/xap/An24_gauges/ssos_cc", "float", 0);  -- ssos current consumption
-createProp("sim/custom/xap/An24_gauges/ssos_sw", "int", 1);  -- ssos switcher
+createProp("sim/custom/xap/An24_gauges/ssos_sw", "int", 0);  -- ssos switcher
 createProp("sim/custom/xap/An24_gauges/ssos_power_lit", "int", 0);  -- ssos power lamp
 createProp("sim/custom/xap/An24_gauges/ssos_sw_cap", "int", 0);  -- ssos switcher cap
 createProp("sim/custom/xap/An24_gauges/ssos_test_sw", "int", 0);  -- ssos test switcher
@@ -1195,7 +1274,10 @@ components = {
 --------------------------
 -- aircraft logic --
 --------------------------
+
 KLN90_enabler {},
+parshukovupdate {},		
+parshukovupdatesound {},
 rsbn_logic {},
 time_logic {},
 flight_controls{},
@@ -1263,7 +1345,6 @@ prop_anim {},
 msrp {
 		position = {0, 0, 2048, 2048},
 		},
-
 
 electric_panel_3d {
 		position = {0, 0, 2048, 2048},
@@ -1630,10 +1711,10 @@ curs_mp {
 map {
 		position = {1514, 5, 530, 530},
 		},
-		
-KLN90_panel { 
-			position = { 908, 8, 588, 188 } 
-},
+-- KLN90 {},		
+-- KLN90_panel { 
+-- 		position = { 908, 8, 588, 188 } 
+-- },
 
 
 }

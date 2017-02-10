@@ -51,7 +51,7 @@ local LAMP_PERIOD = 0.18
 local lamp_vis = false
 local power = false
 local alarm = false
-
+set(ssos_sw,1)
 function update()
 	local sim_time = get(flight_time)
 	passed = get(frame_time)
@@ -172,9 +172,10 @@ components = {
 			switcher_pushed = true
 			if get(ssos_sw_cap) ~= 0 then
                 set(ssos_sw_cap, 0)
-				set(ssos_sw, 0)
+				set(ssos_sw, 1)
             else
                 set(ssos_sw_cap, 1)
+				
             end
 		end
             return true;
