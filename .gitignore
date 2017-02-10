@@ -1,2 +1,5 @@
-Thumbs.db
-.DS_Store
+**/Thumbs.db
+**/.DS_Store
+/An24_v10_prefs.txt
+/panels.txt
+An24_v10_prefs.txt
