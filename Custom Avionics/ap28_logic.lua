@@ -120,11 +120,14 @@ local gik_curse_last = 0
 -- commands
 
 -- turn off AP
+local ap_disco_snd = loadSample('Sounds/alert/autopilot_disco.wav')
+
 function ap_off_handler(phase)  -- for all commands phase equals: 0 on press; 1 while holding; 2 on release
 	if 0 == phase and ap_state == 2 then
 		ap_state = 1
-    end
-return 0
+    playSample(ap_disco_snd, 0)
+  end
+  return 0
 end
 
 --...from "fdir_servos_down_one"...
