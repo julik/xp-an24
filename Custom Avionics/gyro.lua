@@ -50,12 +50,41 @@ local lon_last = get(longitude)
 
 local geo_corr = 0
 
+-- We need to compute the longitudinal difference,
+-- preserving the sign depending on whether we move east or west, which gets painful
+-- near the international date line
+local function sign_preserving_lon_diff(lon_current, lon_previous)
+  --    dlon(170.0, 171.0)) -- moving east -1
+  --    dlon(171.0, 170.0)) -- moving west 1
+  --    dlon(-171.0, -170.0)) -- moving east -1
+  --    dlon(-170.0, -171.0)) -- moving west 1
+  --    dlon(-0.5, 0.5)) -- moving east -1
+  --    dlon(0.5, -0.5)) -- moving west 1
+  --    dlon(179.5, -179.5)) -- moving east -1
+  --    dlon(-179.5, 179.5)) -- moving west 1
+  -- Effectively it is a problem of finding the smallest angle, but preserving the sign.
+  -- http://stackoverflow.com/a/7869457
+  local dlon = (lon_current - lon_previous)
+  if dlon > 180 then
+    dlon = dlon - 360
+  end
+  if dlon < -180 then
+    dlon = dlon + 360
+  end
+  return dlon
+end
+
 -- postframe calculations
 function update()
 	-- time calculations
 	passed = get(frame_time)
--- pre bug check
-if passed > 0 then
+  
+  -- there might be a situation on load apparently
+  -- where the frame time can be negative, just exit early
+  if passed < 0 then
+    return
+  end
+
 	-- calculate power
 	if get(bus_DC_27_volt) > 21 and get(bus_AC_36_volt) > 30 and get(switch) > 0 and get(fail) < 6 then
 		--print("work 1")
@@ -81,20 +110,16 @@ if passed > 0 then
 			local lat_now = get(latitude)
 			local lon_now = get(longitude)
 			
-			geo_corr = (lon_now - lon_last) * math.sin(math.rad((lat_last + lat_now)/2))
-			
+			geo_corr = sign_preserving_lon_diff(lon_now, lon_last) * math.sin(math.rad((lat_last + lat_now)/2))
+			-- print(lon_now, lon_last, geo_corr)
 			lat_last = lat_now
 			lon_last = lon_now
 			
 			if geo_corr == geo_corr then
-				curse = curse - geo_corr -- test
+				curse = curse - geo_corr -- test for NaN and/or Inf?
 			end
 			
-
-			--print(geo_corr)
-			
 			counter = 0
-			--print("work 2")
 		end
 		counter = counter + passed
 	
@@ -115,12 +140,6 @@ if passed > 0 then
 	else
 		set(gyro_cc, 0)
 	end
-	
-	
-
-	
-
-end
 
 end
 
