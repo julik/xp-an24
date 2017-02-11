@@ -122,7 +122,6 @@ local gik_curse_last = 0
 -- commands
 
 -- turn off AP
-ap_off_command = findCommand("sim/autopilot/fdir_servos_down_one")
 function ap_off_handler(phase)  -- for all commands phase equals: 0 on press; 1 while holding; 2 on release
 	if 0 == phase and ap_state == 2 then
 		ap_state = 1
@@ -133,8 +132,13 @@ function ap_off_handler(phase)  -- for all commands phase equals: 0 on press; 1 
     end
 return 0
 end
-registerCommandHandler(ap_off_command, 0, ap_off_handler)
 
+--...from "fdir_servos_down_one"...
+ap_off_command = findCommand("sim/autopilot/fdir_servos_down_one")
+registerCommandHandler(ap_off_command, 0, ap_off_handler)
+-- ..and from the "fdir_toggle" (same command as on the Tu-154)
+ap_off_command_fdt = findCommand("sim/autopilot/fdir_toggle")
+registerCommandHandler(ap_off_command_fdt, 0, ap_off_handler)
 
 -- turn ON AP
 ap_on_command = findCommand("sim/autopilot/fdir_servos_up_one")
