@@ -16,10 +16,10 @@ defineProperty("check_ahz_txt", loadImage("lamps.png", 0, 30, 50, 30))
 defineProperty("planka", loadImage("ag_tape.png", 0, 156, 10, 200))
 
 -- define component property table.
-defineProperty("pitch_left", globalPropertyf("sim/cockpit2/gauges/indicators/pitch_electric_deg_pilot"))
-defineProperty("roll_left", globalPropertyf("sim/cockpit2/gauges/indicators/roll_electric_deg_pilot"))
-defineProperty("pitch_right", globalPropertyf("sim/cockpit2/gauges/indicators/pitch_electric_deg_copilot"))
-defineProperty("roll_right", globalPropertyf("sim/cockpit2/gauges/indicators/roll_electric_deg_copilot"))
+defineProperty("pitch_left", globalPropertyf("sim/flightmodel/position/theta"))
+defineProperty("roll_left", globalPropertyf("sim/flightmodel/position/phi"))
+defineProperty("pitch_right", globalPropertyf("sim/flightmodel/position/theta"))
+defineProperty("roll_right", globalPropertyf("sim/flightmodel/position/phi"))
 --defineProperty("slip", globalPropertyf("sim/flightmodel/misc/slip"))
 --defineProperty("turn", globalPropertyf("sim/cockpit2/gauges/indicators/turn_rate_heading_deg_pilot"))
 -- ias variable
@@ -180,6 +180,18 @@ local power27_main = 0
 local power36 = 0
 
 local eng_check = true
+add_roll_left = 0
+add_roll_right = 0
+add_roll_third = 0
+
+add_pitch_left = 0
+add_pitch_right = 0
+add_pitch_third = 0
+
+flag1 = 0
+flag2 = 0
+flag3 = 0
+
 
 function update()
 	-- time variables
@@ -261,13 +273,24 @@ if passed > 0 then
 	
 	-------------------
 	-- left --
+	
 	if active_logic then
+	
 		-- calculate roll and pitch for power off
+		if power27 * power36 * get(AGD_left) ~= 0 and flag1 == 1 then
+		add_roll_left = power_roll_left - get(roll_left) 
+		add_pitch_left =  power_pitch_left - get(pitch_left)
+		flag1 = 0
+		end
+		
 		if power27 * power36 * get(AGD_left) == 0 or fail_left == 6 then
-			power_roll_left = get(roll_left) * real_num
-			power_pitch_left = get(pitch_left) * real_num
-		end -- if no power, then horizon will remain its position
-
+			flag1 = 1
+			else
+			power_roll_left = get(roll_left) + add_roll_left
+			power_pitch_left = get(pitch_left) + add_pitch_left
+		end 
+		
+		
 
 		-- calculate power ON and OFF initial roll and pitch
 		if power27 * power36 * AGD_left_sw == 0 or fail_left == 6 then
@@ -287,7 +310,7 @@ if passed > 0 then
 		if math.abs(pitch_err_left) < 20 then pitch_err_left = pitch_err_left + pitch_err_left * (math.random() - 0.49999) * passed * 0.001 * real_num end
 
 		-- arresting mechanism
-		if power27 * power36 * arrest_left > 0 and fail_left < 6 then
+		if power27 * power36 * arrest_left * get(AGD_left) > 0 and fail_left < 6 then
 			-- set new correction
 			--if math.abs(initial_roll_err_left) < 0.1 then
 				if roll_left_show > 0.1 then roll_corr_left = roll_corr_left + 10 * passed
@@ -315,8 +338,8 @@ if passed > 0 then
 		end
 
 		-- main formula for curent position
-		roll_left_show = get(roll_left) - power_roll_left + initial_roll_err_left + roll_err_left - roll_corr_left
-		pitch_left_show = get(pitch_left) - power_pitch_left + initial_pitch_err_left + pitch_err_left - pitch_corr_left
+		roll_left_show = power_roll_left - roll_corr_left --+ roll_err_left+ initial_roll_err_left 
+		pitch_left_show = power_pitch_left - pitch_corr_left --+ pitch_err_left + initial_pitch_err_left  
 			-- final result is a summ of power position, initial error of gauge, collective error of gauge and correction of this error
 		-- limit pitch
 		if pitch_left_show > 80 then pitch_left_show = 80
@@ -329,11 +352,18 @@ if passed > 0 then
 		-----------------------
 		-- right --
 		-- calculate roll and pitch for power off
-		if power27_main * power36 * get(AGD_right) == 0 or fail_right == 6 then
-			power_roll_right = get(roll_right) * real_num
-			power_pitch_right = get(pitch_right) * real_num
-		end -- if no power, then horizon will remain its position
-
+		if power27 * power36 * get(AGD_right) ~= 0 and flag2 == 1 then
+		add_roll_right = power_roll_right - get(roll_right) 
+		add_pitch_right = power_pitch_right - get(pitch_right)
+		flag2 = 0
+		end
+		
+		if power27 * power36 * get(AGD_right) == 0 or fail_right == 6 then
+			flag2 = 1
+			else
+			power_roll_right = get(roll_right) + add_roll_right
+			power_pitch_right = get(pitch_right) + add_pitch_right
+		end 
 		
 		-- calculate power ON and OFF initial roll and pitch
 		if power27_main * power36 * AGD_right_sw == 0 or fail_right == 6 then
@@ -353,7 +383,7 @@ if passed > 0 then
 		if math.abs(pitch_err_right) < 20 then pitch_err_right = pitch_err_right + pitch_err_right * (math.random() - 0.49999) * passed * 0.001 * real_num end
 
 		-- arresting mechanism
-		if power27_main * power36 * arrest_right > 0 and fail_right < 6 then
+		if power27_main * power36 * arrest_right * get(AGD_right) > 0 and fail_right < 6 then
 			-- set new correction
 			-- set new correction
 			--if math.abs(initial_roll_err_right) < 0.1 then
@@ -383,8 +413,8 @@ if passed > 0 then
 		end
 
 		-- main formula for curent position
-		roll_right_show = get(roll_right) - power_roll_right + initial_roll_err_right + roll_err_right - roll_corr_right
-		pitch_right_show = get(pitch_right) - power_pitch_right + initial_pitch_err_right + pitch_err_right - pitch_corr_right
+		roll_right_show = power_roll_right - roll_corr_right --+ roll_err_right + initial_roll_err_right  
+		pitch_right_show = power_pitch_right - pitch_corr_right --+ pitch_err_right + initial_pitch_err_right 
 			-- final result is a summ of power position, initial error of gauge, collective error of gauge and correction of this error
 		-- limit pitch
 		if pitch_right_show > 80 then pitch_right_show = 80
@@ -400,10 +430,18 @@ if passed > 0 then
 		-----------------------
 		-- third --
 		-- calculate roll and pitch for power off
-		if power27_main * power36 * get(AGB_left) == 0 or fail_right == 6 then
-			power_roll_third = get(roll_right) * real_num
-			power_pitch_third = get(pitch_right) * real_num
-		end -- if no power, then horizon will remain its position
+		if power27 * power36 * get(AGB_left) ~= 0 and flag3 == 1 then
+		add_roll_third = power_roll_third - get(roll_left) 
+		add_pitch_third =  power_pitch_third - get(pitch_left)
+		flag3 = 0
+		end
+		
+		if power27 * power36 * get(AGB_left) == 0 or fail_left == 6 then
+			flag3 = 1
+			else
+			power_roll_third = get(roll_left) + add_roll_third
+			power_pitch_third = get(pitch_left) + add_pitch_third
+		end 
 
 		-- calculate power ON and OFF initial roll and pitch
 		if power27_main * power36 * AGB_left_sw == 0 or fail_right == 6 then
@@ -423,7 +461,7 @@ if passed > 0 then
 		if math.abs(pitch_err_third) < 20 then pitch_err_third = pitch_err_third + pitch_err_third * (math.random() - 0.49999) * passed * 0.001 * real_num end
 
 		-- arresting mechanism
-		if get(arrest_third) > 0 and fail_right < 6 then
+		if get(arrest_third) * get(AGB_left) > 0 and fail_right < 6 then
 			-- set new correction
 			if math.abs(initial_roll_err_third) < 0.1 then
 				if roll_third_show > 0.1 then roll_corr_third = roll_corr_third + 6 * passed
@@ -454,8 +492,8 @@ if passed > 0 then
 		--print(AGB_left_sw, initial_pitch_err_third, pitch_err_third, power_pitch_third)
 		
 		-- main formula for curent position
-		roll_third_show = get(roll_right) - power_roll_third + initial_roll_err_third + roll_err_third - roll_corr_third
-		pitch_third_show = get(pitch_right) - power_pitch_third + initial_pitch_err_third + pitch_err_third - pitch_corr_third
+		roll_third_show = power_roll_third - roll_corr_third --+ roll_err_third + initial_roll_err_third 
+		pitch_third_show = power_pitch_third - pitch_corr_third --+ pitch_err_third + initial_pitch_err_third 
 			-- final result is a summ of power position, initial error of gauge, collective error of gauge and correction of this error
 		-- limit pitch
 		if pitch_third_show > 80 then pitch_third_show = 80

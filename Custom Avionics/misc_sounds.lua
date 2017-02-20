@@ -115,10 +115,17 @@ function update()
 	setSamplePitch(po750_sound, po750_gain)	
 
 	-- PT1000 inverter
-	if power and (get(inv_PT1000_1) == 1 or get(inv_PT1000_2) == 1) and pt1000_gain < 1000 then pt1000_gain = pt1000_gain + passed * 300
-	elseif pt1000_gain > 0 then pt1000_gain = pt1000_gain - passed * 300 end
-	if pt1000_gain > 1000 then pt1000_gain = 1000
-	elseif pt1000_gain < 0 then pt1000_gain = 0 end
+	local pt1000_peak_gain = 950
+	if power and (get(inv_PT1000_1) == 1 or get(inv_PT1000_2) == 1) and pt1000_gain < pt1000_peak_gain then
+    pt1000_gain = pt1000_gain + passed * 300
+	elseif pt1000_gain > 0 then
+    pt1000_gain = pt1000_gain - passed * 300
+  end
+	if pt1000_gain > pt1000_peak_gain then
+    pt1000_gain = pt1000_peak_gain
+	elseif pt1000_gain < 0 then
+    pt1000_gain = 0
+  end
 	
 	setSampleGain(pt1000_sound, pt1000_gain * 0.5 * (1 - external))
 	setSamplePitch(pt1000_sound, pt1000_gain)		

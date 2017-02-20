@@ -142,6 +142,3 @@ function update()
 	end
 
 end
-
-
-

@@ -70,9 +70,9 @@ set(acf_has_press_contr, 1)
 -- tables for needed cabin alt
 local alt_table = {{ -50000, -50000},    -- bugs workaround
 				  { 0, 0 },    -- on standard pressure zero level
-            	  {  2000, 2000 },     -- 2000 ft
-           		  {  10000, 2000 },    -- 10000 ft
-          		  {  23000, 11500 },   -- 23000 ft
+            	  {  2000, 0 },     -- 2000 ft
+           		  {  11000, 0 },    -- 11000 ft
+          		  {  23000, 9000 },   -- 23000 ft
           		  {  1000000, 979500 }}   -- linear above 23000 ft
 
 -- interpolate values using table as reference
@@ -144,7 +144,7 @@ function update()
 		cabin_alt = needed_cabin_alt
 		vvi = 1500 * math.min(1, math.abs(actual_alt - cabin_alt) * 0.001)
 	elseif angle1 + angle2 > 90 then
-		cabin_alt = (needed_cabin_alt + real_alt) / 2
+		cabin_alt = needed_cabin_alt
 		if actual_alt > cabin_alt + 50 then vvi = 100 * math.min(1, math.abs(actual_alt - cabin_alt) * 0.001) 
 		elseif actual_alt < cabin_alt - 50 then vvi = 750 * math.min(1, math.abs(actual_alt - cabin_alt) * 0.001) 
 		else vvi = 0 * math.min(1, math.abs(actual_alt - cabin_alt) * 0.001) 

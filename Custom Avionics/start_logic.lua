@@ -68,8 +68,17 @@ defineProperty("set_real_startup", globalPropertyi("sim/custom/xap/An24_set/real
 defineProperty("frame_time", globalPropertyf("sim/custom/xap/An24_time/frame_time")) -- time for frames
 defineProperty("sim_run_time", globalPropertyf("sim/time/total_running_time_sec")) -- sim time
 
-local time_last = get(sim_run_time)  -- time for previous frame
+defineProperty("tro_comm_1", globalPropertyf("sim/flightmodel/engine/ENGN_thro[0]"))
+defineProperty("tro_comm_2", globalPropertyf("sim/flightmodel/engine/ENGN_thro[1]"))
+defineProperty("tro_comm_3", globalPropertyf("sim/flightmodel/engine/ENGN_thro[2]"))
 
+defineProperty("tro_need_1", globalPropertyf("sim/flightmodel/engine/ENGN_thro_use[0]"))
+defineProperty("tro_need_2", globalPropertyf("sim/flightmodel/engine/ENGN_thro_use[1]"))
+defineProperty("tro_need_3", globalPropertyf("sim/flightmodel/engine/ENGN_thro_use[2]"))
+
+
+local time_last = get(sim_run_time)  -- time for previous frame
+set(tro_comm_1, 0)
 local left_eng_start_time = time_last - 100
 local right_eng_start_time = time_last - 100
 local ru19_start_time = time_last - 100
@@ -92,6 +101,7 @@ local ru19_start_button_pressed = false
 
 -- postframe calculaions
 function update()
+--set(tro_comm_1, 20)
 	-- time calculations
 	local time_now = get(sim_run_time)
 	local passed = get(frame_time)
@@ -161,13 +171,13 @@ if passed > 0 then
 			end
 			
 			-- turn on the starter
-			if time_now - left_eng_start_time > 3 and time_now - left_eng_start_time < 28 then
+			if time_now - left_eng_start_time > 1 and time_now - left_eng_start_time < 28 then
 				commandBegin(starter_1)
 				set(stg1_starter, 1)
 			end
 			
 			-- turn on the fuel
-			if (time_now - left_eng_start_time > 20 and time_now - left_eng_start_time < 28) or rpm1 > 30 then
+			if (time_now - left_eng_start_time > 25 and time_now - left_eng_start_time < 45) or rpm1 > 30 then
 				set(fuel_start1, 1)
 			end
 			
@@ -187,6 +197,9 @@ if passed > 0 then
 			elseif time_now - left_eng_start_time > 26 and rpm1 < 45 then 
 				start_volt = 51 + (rpm1 - 43) * 2
 				start_amp = 600 - (rpm1 - 43) * 5
+				
+			
+				
 			else 
 				start_volt = 0
 				start_amp = 0
@@ -214,7 +227,16 @@ if passed > 0 then
 				left_rpm_check = false
 			end	
 			
+					
 		end
+		----------------------Tunning startup extended throttle for left engine here------------------------------------------------------------------------
+			if time_now - left_eng_start_time < 60 and rpm1 > 10 and rpm1 < 45 then 
+				set(tro_need_1, 0.001)
+			
+			elseif time_now - left_eng_start_time < 60 and rpm1 > 45 and rpm1 < 92 then 
+				set(tro_need_1, 0.075)
+		    end
+			
 
 		-- start process on air for left engine	
 		if eng1_starting and not ground_start and not cold_rotate then
@@ -297,13 +319,13 @@ if passed > 0 then
 			end
 			
 			-- turn on the starter
-			if time_now - right_eng_start_time > 3 and time_now - right_eng_start_time < 28 then
+			if time_now - right_eng_start_time > 1 and time_now - right_eng_start_time < 28 then
 				commandBegin(starter_2)
 				set(stg2_starter, 1)
 			end
 
 			-- turn on the fuel
-			if (time_now - right_eng_start_time > 20 and time_now - right_eng_start_time < 28) or rpm2 > 30 then
+			if (time_now - right_eng_start_time > 25 and time_now - right_eng_start_time < 45) or rpm2 > 30 then
 				set(fuel_start2, 1)
 			end
 			
@@ -350,7 +372,15 @@ if passed > 0 then
 				right_rpm_check = false
 			end				
 		end
+----------------------Tunning startup extended throttle for right engine here---
 
+			if time_now - right_eng_start_time < 60 and rpm2 > 10 and rpm2 < 45 then 
+				set(tro_need_2, 0.001)
+			
+			elseif time_now - right_eng_start_time < 60 and rpm2 > 45 and rpm2 < 92 then 
+				set(tro_need_2, 0.075)
+		    end
+			
 		-- start process on air for right engine	
 		if eng2_starting and not ground_start and not cold_rotate then
 			-- turn on the starter
@@ -403,6 +433,9 @@ if passed > 0 then
 				start_volt = 43 + (rpm2 - 18.8) * 0.13
 				start_amp = 700 - (rpm2 - 18.8) * 10
 			elseif time_now - right_eng_start_time > 26 and rpm2 < 45 then 
+				start_volt = 51 + (rpm2 - 43) * 2
+				start_amp = 700 - (rpm2 - 43) * 5
+				elseif time_now - right_eng_start_time > 26 and rpm2 < 90 then 
 				start_volt = 51 + (rpm2 - 43) * 2
 				start_amp = 700 - (rpm2 - 43) * 5
 			else 

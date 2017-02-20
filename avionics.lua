@@ -1308,6 +1308,7 @@ start_logic {},
 fire_logic {},
 siren_logic {},
 noseweel_logic {},
+aero_extra {},
 view {},
 flap_aero {},
 failures {},
@@ -1711,10 +1712,10 @@ curs_mp {
 map {
 		position = {1514, 5, 530, 530},
 		},
--- KLN90 {},		
--- KLN90_panel { 
--- 		position = { 908, 8, 588, 188 } 
--- },
+--KLN90 {},		
+--KLN90_panel { 
+--			position = { 908, 8, 588, 188 } 
+--},
 
 
 }
