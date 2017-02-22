@@ -221,6 +221,7 @@ rsubpage[100] = 0
 local FPlan = {}
 local values = {}
 
+local toto = 0 -- patch 30072014								
 --local APT3_Serializer = { }
 --local Nav5Comp_Serializer = { }
 
@@ -3355,7 +3356,7 @@ while WPTnum <= FPlan[0]["length"] do
 			return true
 		end,
 	})
-	table.insert ( Nav5Comp_Serializer, WrapTextLit(round(x1-1.5),round(y1-1.5),3,5,1,brt,1) )
+	table.insert ( Nav5Comp_Serializer, WrapTextLit(round(x1-1.5),round(y1-1.5),3,3,1,brt,1) )
 	if mode == 1 then
 		table.insert(nametable, {FPlan[0][WPTnum]["ident"], x1, y1, size})
 	else
@@ -7695,7 +7696,7 @@ function WPTpage(types, mode, subpage)
 							local dist = distance(FPlan[0]["APPAPT"]["lat"], FPlan[0]["APPAPT"]["lon"], values["GPSlat"], values["GPSlon"])
 							
 							if get(APR) == 0 then
-								if dist <= 30 and dist > 29.5 then
+								if dist <= 30 and dist > 29.5 and toto == 0 then -- patch toto 30072014
 									set(APR, 1)
 									table.insert(values["MSGLIST"], 1, "")
 									table.insert(values["MSGLIST"], 1, "PRESS ALT TO SET BARO")
@@ -13611,7 +13612,7 @@ function WPTpage(types, mode, subpage)
 
 												local ident = ident2 .. letter
 												createWPT(4, ident, 0)
-												local WPT = enterident(ident, 4, 0, 5, 0)
+												local WPT = enterident(ident, 3, 0, 5, 0)
 												WPT[1]["lat"]= lat3 /pi*180
 												WPT[1]["lon"]= lon3 /pi*-180
 												--values["reditvalue"][1] = WPT
@@ -13642,7 +13643,7 @@ function WPTpage(types, mode, subpage)
 												--The WPT is handed over to the left (FPLN), we don't need it on the right anymore.
 												values["reditstate"] = 0
 												--values["reditvalue"] = nil
-												controls["rCRSRchar"] = 0	
+												controls["rCRSRchar"] = 0
 												--	values["FPLREF"] = table.copy(values["FPLREF"])
 												--	values["FPLREF"] = {}
 												--	values["FPLREF"]["ident"] = "     "
@@ -16670,8 +16671,8 @@ function WPTpage(types, mode, subpage)
 								
 								if get(SC_master) == 2 then
 									
-								set(sc_gline_1, gline[1])
-								set(sc_gline_2, gline[2])
+									set(sc_gline_1, gline[1])
+									set(sc_gline_2, gline[2])
 									set(sc_gline_3, gline[3])
 									set(sc_gline_4, gline[4])
 									set(sc_gline_5, gline[5])
@@ -17483,9 +17484,8 @@ function draw()
 	
 	
 	if get(SC_master) == 1 then
-	drawAll(Nav5Comp)
-	drawAll(APT3Comp)
-		
+		drawAll(Nav5Comp)
+		drawAll(APT3Comp)		
 		
 		drawText(font, 125, 98, get(sc_gline_1), brt, brt, brt)
 		drawText(font, 125, 87, get(sc_gline_2), brt, brt, brt)
@@ -17521,11 +17521,10 @@ function draw()
 		drawText(fontb, 125, 43, bline[6], brt, brt, brt)
 		drawText(fontb, 125, 29, bline[7], brt, brt, brt)
 		drawText(fontl, 129.5, 87, values["scaleline"], brt, brt, brt)
-end
+	end
 	drawAll(Nav5Comp)
 	drawAll(APT3Comp)
-	
-	
+		
 	drawAll(components2)
 	
 end
