@@ -105,27 +105,34 @@ function update()
 	
 	--print(camera_distance)
 	
-	-- PO750 inverter
-	if power and get(inv_PT750) == 1 and po750_gain < 1000 then po750_gain = po750_gain + passed * 300
-	elseif po750_gain > 0 then po750_gain = po750_gain - passed * 300 end
-	if po750_gain > 1000 then po750_gain = 1000
-	elseif po750_gain < 0 then po750_gain = 0 end
+	local inverter_snd_peak_gain = 950
+  
+	if power and get(inv_PT750) == 1 and po750_gain < 1000 then
+    po750_gain = po750_gain + passed * 300
+	elseif po750_gain > 0 then
+    po750_gain = po750_gain - passed * 300
+  end
+  
+	if po750_gain > inverter_snd_peak_gain then
+    po750_gain = inverter_snd_peak_gain
+	elseif po750_gain < 0 then
+    po750_gain = 0
+  end
 	
 	setSampleGain(po750_sound, po750_gain * 0.5 * (1 - external))
 	setSamplePitch(po750_sound, po750_gain)	
 
 	-- PT1000 inverter
-	local pt1000_peak_gain = 950
-	if power and (get(inv_PT1000_1) == 1 or get(inv_PT1000_2) == 1) and pt1000_gain < pt1000_peak_gain then
+	if power and (get(inv_PT1000_1) == 1 or get(inv_PT1000_2) == 1) and pt1000_gain < inverter_snd_peak_gain then
     pt1000_gain = pt1000_gain + passed * 300
 	elseif pt1000_gain > 0 then
     pt1000_gain = pt1000_gain - passed * 300
   end
-	if pt1000_gain > pt1000_peak_gain then
-    pt1000_gain = pt1000_peak_gain
+	if pt1000_gain > inverter_snd_peak_gain then
+    pt1000_gain = inverter_snd_peak_gain
 	elseif pt1000_gain < 0 then
     pt1000_gain = 0
-  end
+end
 	
 	setSampleGain(pt1000_sound, pt1000_gain * 0.5 * (1 - external))
 	setSamplePitch(pt1000_sound, pt1000_gain)		
