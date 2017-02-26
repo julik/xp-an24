@@ -34,8 +34,17 @@ __крайне не рекомендуется,__ именно потому чт
 ## English
 
 This repo contains a running copy of Felis' An-24 for X-Plane 10, with fixes applied by enthusiasts
-and fans. Please note that this is __not__ an officially sanctioned repository and no tech support
-of any kind is going to be provided here. If you have questions (or have issues reading commit
-messages in Russian, or want to submit a bugfix) - feel free to ask by opening an issue, we will be
-more than happy to provide some guidance. Unfortunately at this time it would be hard to keep the dev
-process in English exclusively.
+and fans. This repository **has been officially sanctioned** by Felis, but you are not permitted
+to redistribute this content commercially.
+
+If you want tech support, please ask in the [X-Plane.org thread on the subject.](http://forums.x-plane.org/index.php?/forums/topic/115549-ann-an-24-grassroots-repo-on-github/)
+
+If you have concrete fixes or suggestions (or specific bug reports with reproduction steps) please do file a Github issue.
+We will be more than happy to offer some guidance. If you have questions (or have issues reading commit in Russian messages in Russian - please ask,
+At this time it would be hard to keep the dev process in English exclusively.
+
+## KLN90
+
+This aircraft includes the KLN90 from the EADT project. The KLN is stored isolated in `Custom Avionics/EADT_KLN90B`. If you need to change it, or update it, download
+the latest version from EADT. The KLN is offered as part of this package by kind permission from Dennis Pruefer, the original author. You are not permitted to
+redistribute the package commercially with the KLN included.
