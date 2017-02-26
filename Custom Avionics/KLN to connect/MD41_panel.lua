@@ -1,6 +1,5 @@
 ﻿size = {761, 288}
 
-
 defineProperty("bg", loadImage("MD41.png", 0, 0, 761, 288))
 defineProperty("NAVimg", loadImage("MD41.png", 150, 310, 85, 30))
 defineProperty("ARMimg", loadImage("MD41.png", 275, 310, 85, 30))
