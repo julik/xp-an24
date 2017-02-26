@@ -1,6 +1,6 @@
 --search and include KLN 90, if it exist in Custom Avionics
 
-createGlobalPropertyi("sim/custom/kln_is_present", 0) -- поворот передней стойки шасси -70 влево, +70 вправо
+createGlobalPropertyi("sim/custom/kln_is_present", 0) -- РїРѕРІРѕСЂРѕС‚ РїРµСЂРµРґРЅРµР№ СЃС‚РѕР№РєРё С€Р°СЃСЃРё -70 РІР»РµРІРѕ, +70 РІРїСЂР°РІРѕ
 
 defineProperty("kln_is_present", globalPropertyf("sim/custom/kln_is_present"))
 
