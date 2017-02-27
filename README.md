@@ -45,6 +45,7 @@ At this time it would be hard to keep the dev process in English exclusively.
 
 ## KLN90
 
-This aircraft includes the KLN90 from the EADT project. The KLN is stored isolated in `Custom Avionics/EADT_KLN90B`. If you need to change it, or update it, download
+This aircraft includes the KLN90 from the EADT project, and it is enabled by default. Make sure to copy the directories from `Install_into_main_XP_directory` to
+the root dir of the sim before you load the aircraft. The KLN is stored isolated in `Custom Avionics/KLN to connect`. If you need to change it, or update it, download
 the latest version from EADT. The KLN is offered as part of this package by kind permission from Dennis Pruefer, the original author. You are not permitted to
 redistribute the package commercially with the KLN included.
